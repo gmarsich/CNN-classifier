@@ -34,10 +34,10 @@ def transform(image):
 
 # To transform the images in the proper format
 def transform_ALEXNET(image):
-    resize = transforms.Compose([transforms.Resize([64,64]), # resize the images as 64x64
+    resize = transforms.Compose([transforms.Resize([224,224]), # resize the images #TODO
                                  transforms.ToTensor()]) # to get a PyTorch tensor. The pixels' values will be scaled from the range [0, 255] to the range [0.0, 1.0]
     resized_image = resize(image)
-    resized_image = resized_image * 255.0 # revert the normalization, i.e., go back to range [0, 255]
+    #resized_image = resized_image * 255. # if uncommented, the accuracy will decrease #TODO
     return resized_image
 
 
@@ -194,3 +194,23 @@ class GrayscaleToRGBDataset(Dataset):
         img = self.transform(img)
         return img, target
 
+
+
+# To extract features for each sample in the dataset
+def extract(model, loader):
+    features = []
+    labels = []
+
+    model.eval()
+    with torch.no_grad():
+        for inputs, target in loader:
+            # Extract features from the intermediate layer
+            intermediate_features = model(inputs)
+            features.append(intermediate_features.view(intermediate_features.size(0), -1).numpy())
+            labels.append(target.numpy())
+
+    # Concatenate features and labels
+    features = np.concatenate(features, axis=0)
+    labels = np.concatenate(labels, axis=0)
+
+    return features, labels
