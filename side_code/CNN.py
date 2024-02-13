@@ -100,13 +100,11 @@ class CNN2(nn.Module):
 
         # Fully connected layer. 32: number of channels; 12, 12: height and width of the feature map
         self.fc = nn.Linear(32 * 7 * 7, 15)
-        # Classification layer
-        #self.output = nn.CrossEntropyLoss() #TODO: ma è giusto da mettere? Al momento è tolto
 
         self.initialize_weights()
 
 
-    def initialize_weights(self):       #TODO: the professor mentioned to avoid normalization, what should I do?
+    def initialize_weights(self):
         for module in self.modules(): # self.modules() comes from nn.Module; to recursively iterate over all the modules
             if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
                 init.normal_(module.weight, mean=0, std=0.01) # initial weights drawn from a Gaussian distribution having a mean of 0 and a standard deviation of 0.01
@@ -133,7 +131,6 @@ class CNN2(nn.Module):
         x = x.view(-1, 32 * 7 * 7)  # flatten the tensor before passing to fully connected layers (the size -1 is inferred from other dimensions)
         
         x = self.fc(x)
-        #x = self.output(x) #TODO: in caso, da eliminare
 
         return x
 
@@ -174,16 +171,14 @@ class CNN3(nn.Module):
         # ReLU activation after conv3  
         self.relu3 = nn.ReLU() # output: 12*12
         # Dropout
-        self.dp = nn.Dropout(.1)
+        self.dp = nn.Dropout(.4) # dropout probability of 0.4
         # Fully connected layer. 32: number of channels; 12, 12: height and width of the feature map
         self.fc = nn.Linear(32 * 7 * 7, 15)
-        # Classification layer
-        #self.output = nn.CrossEntropyLoss() #TODO: ma è giusto da mettere? Al momento è tolto
 
         self.initialize_weights()
 
 
-    def initialize_weights(self):       #TODO: the professor mentioned to avoid normalization, what should I do?
+    def initialize_weights(self):
         for module in self.modules(): # self.modules() comes from nn.Module; to recursively iterate over all the modules
             if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
                 init.normal_(module.weight, mean=0, std=0.01) # initial weights drawn from a Gaussian distribution having a mean of 0 and a standard deviation of 0.01
@@ -211,7 +206,6 @@ class CNN3(nn.Module):
         x = x.view(-1, 32 * 7 * 7)  # flatten the tensor before passing to fully connected layers (the size -1 is inferred from other dimensions)
         
         x = self.fc(x)
-        #x = self.output(x) #TODO: in caso, da eliminare
 
         return x
 

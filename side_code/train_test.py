@@ -42,7 +42,7 @@ def transform_ALEXNET(image):
 class HorizontallyFlippedDataset(Dataset):
     def __init__(self, original_dataset):
         self.original_dataset = original_dataset
-        self.horizontal_flip_transform = transforms.RandomHorizontalFlip()
+        self.horizontal_flip_transform = transforms.RandomHorizontalFlip(p=1)
 
     def __getitem__(self, index):
         image, label = self.original_dataset[index]
