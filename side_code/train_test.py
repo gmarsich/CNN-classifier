@@ -1,21 +1,16 @@
 import torch
-from torch import nn
+from torch.utils.data import Dataset
 
-import os
 from torchvision import transforms
-from torchvision.datasets import ImageFolder
-from torch.utils.data import random_split, DataLoader
-import torch.optim as optim
-import torch.nn.init as init
-import numpy as np
-from datetime import datetime
-import matplotlib.pyplot as plt
-from PIL import ImageOps
 
 from sklearn.metrics import confusion_matrix
+from datetime import datetime
+
+import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sn
 import pandas as pd
-from torch.utils.data import Dataset
+
 
 
 
@@ -61,7 +56,7 @@ class HorizontallyFlippedDataset(Dataset):
 
 
 # To train for just one epoch
-def train_one_epoch(epoch_index, model, loader, optimizer, loss_function): # to train for just one epoch (one epoch: the network sees the whole training set)
+def train_one_epoch(model, loader, optimizer, loss_function): # to train for just one epoch (one epoch: the network sees the whole training set)
     running_loss = 0.
 
     for i, data in enumerate(loader):
@@ -87,29 +82,28 @@ def train_model(model, EPOCHS, train_loader, val_loader, optimizer, loss_functio
 
     best_validation_loss = np.inf
 
-    loss_train = [] # store the values of the loss for the training set
-    loss_val = [] # store the values of the loss for the validation set
-    accuracies_val = [] # store the values of the accuracy for the validation set
+    loss_train = []  # store the values of the loss for the training set
+    loss_val = []    # store the values of the loss for the validation set
+    accuracies_train = []  # store the values of the accuracy for the training set
+    accuracies_val = []    # store the values of the accuracy for the validation set
 
     for epoch in range(EPOCHS):
         print('EPOCH {}:'.format(epoch + 1))
 
         # Make sure gradient tracking is on, and do a pass over the data
         model.train(True)
-        train_loss = train_one_epoch(epoch, model, train_loader, optimizer, loss_function)
+        train_loss = train_one_epoch(model, train_loader, optimizer, loss_function)
         loss_train.append(train_loss)
 
         running_validation_loss = 0.0
 
-        # If using dropout and/or batch normalization, we need the following, to set the model to evaluation mode, disabling dropout and using population
-        # statistics for batch normalization.
+        # If using dropout and/or batch normalization, set the model to evaluation mode for validation
         model.eval()
-
 
         correct = 0
         total = 0
 
-        with torch.no_grad():      # disable gradient computation and reduce memory consumption
+        with torch.no_grad():  # disable gradient computation and reduce memory consumption
             for i, vdata in enumerate(val_loader):
                 vinputs, vlabels = vdata
                 voutputs = model(vinputs)
@@ -118,15 +112,15 @@ def train_model(model, EPOCHS, train_loader, val_loader, optimizer, loss_functio
                 _, predicted = torch.max(voutputs.data, 1)
                 total += vlabels.size(0)
                 correct += (predicted == vlabels).sum().item()
-        
-        accuracy = 100 * correct / total
-        accuracies_val.append(accuracy)
 
-        validation_loss = running_validation_loss / (i + 1) # average validation loss per minibatch
+            accuracy = 100 * correct / total
+            accuracies_val.append(accuracy)
+
+        validation_loss = running_validation_loss / (i + 1)  # average validation loss per minibatch
         loss_val.append(validation_loss)
-        
-        print('LOSS: train: {}, validation: {}; accuracy validation set: {}%\n'.format(train_loss, validation_loss, accuracy))
 
+        print('LOSS: train: {}, validation: {}; accuracy validation set: {}%\n'.format(train_loss, validation_loss,
+                                                                                        accuracy))
 
         # Track best performance (based on validation), and save the model
         if validation_loss < best_validation_loss:
@@ -135,7 +129,24 @@ def train_model(model, EPOCHS, train_loader, val_loader, optimizer, loss_functio
             model_path = 'model_{}_{}'.format(timestamp, epoch)
             torch.save(model.state_dict(), model_path)
 
-    return model_path, loss_train, loss_val, accuracies_val
+        # Evaluate on the training set to calculate accuracy
+        model.eval()
+
+        running_train_correct = 0
+        running_train_total = 0
+
+        with torch.no_grad():
+            for i, tdata in enumerate(train_loader):
+                tinputs, tlabels = tdata
+                toutputs = model(tinputs)
+                _, predicted = torch.max(toutputs.data, 1)
+                running_train_total += tlabels.size(0)
+                running_train_correct += (predicted == tlabels).sum().item()
+
+            train_accuracy = 100 * running_train_correct / running_train_total
+            accuracies_train.append(train_accuracy)
+
+    return model_path, loss_train, loss_val, accuracies_train, accuracies_val
 
 
 
@@ -148,7 +159,7 @@ def perform_test(model, model_path, test_loader, dataset_test):
     y_pred = []
     y_true = []
 
-    model.load_state_dict(torch.load(model_path))
+    model.load_state_dict(torch.load(model_path)) # loads the saved weights from the specified path
     model.eval()
 
     with torch.no_grad():
@@ -175,7 +186,6 @@ def perform_test(model, model_path, test_loader, dataset_test):
                         columns = [i for i in classes])
     plt.figure(figsize = (5,5))
     sn.heatmap(df_cm, annot=False)
-    #plt.savefig('output.png')
 
 
 

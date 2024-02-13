@@ -1,30 +1,14 @@
-import torch
 from torch import nn
-
-import os
-from torchvision import transforms
-from torchvision.datasets import ImageFolder
-from torch.utils.data import random_split, DataLoader
-import torch.optim as optim
 import torch.nn.init as init
-import numpy as np
-from datetime import datetime
-import matplotlib.pyplot as plt
-from PIL import ImageOps
-
-from sklearn.metrics import confusion_matrix
-import seaborn as sn
-import pandas as pd
-from torch.utils.data import Dataset
 
 
-
+# CNN requested by Task 1
 class CNN1(nn.Module):
 
     # A model will have an __init__() function, where it instantiates its layers
 
     def __init__(self):
-        super(CNN1, self).__init__() # the constructor of the parent class (nn.Module) is called to initialize the model properly.
+        super(CNN1, self).__init__() # the constructor of the parent class (nn.Module) is called to initialize the model properly
 
         # Convolutional layer 1: in_channels=1 because we have a greyscale
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [1] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
@@ -47,13 +31,11 @@ class CNN1(nn.Module):
 
         # Fully connected layer. 32: number of channels; 12, 12: height and width of the feature map
         self.fc = nn.Linear(32 * 12 * 12, 15)
-        # Classification layer
-        #self.output = nn.CrossEntropyLoss() #TODO: ma è giusto da mettere? Al momento è tolto
 
         self.initialize_weights()
 
 
-    def initialize_weights(self):       #TODO: the professor mentioned to avoid normalization, what should I do?
+    def initialize_weights(self):
         for module in self.modules(): # self.modules() comes from nn.Module; to recursively iterate over all the modules
             if isinstance(module, nn.Conv2d) or isinstance(module, nn.Linear):
                 init.normal_(module.weight, mean=0, std=0.01) # initial weights drawn from a Gaussian distribution having a mean of 0 and a standard deviation of 0.01
@@ -77,7 +59,6 @@ class CNN1(nn.Module):
         x = x.view(-1, 32 * 12 * 12)  # flatten the tensor before passing to fully connected layers (the size -1 is inferred from other dimensions)
         
         x = self.fc(x)
-        #x = self.output(x) #TODO: in caso, da eliminare
 
         return x
 
