@@ -11,3 +11,5 @@ In this repository all the files regarding the project for the course "Computer 
 * Folder `side_code`: contains the files `CNN.py` and `train_test.py`, where I collected some methods that were useful to tackle the assignment
 
 * File `CVPR.ipynb`: main file. The development of the project is here. It exploits the files in the `side_code` folder and uses the datasets provided in `data`
+
+* File `Report_GaiaMarsich.pdf`: report on the project
