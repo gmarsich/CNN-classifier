@@ -29,10 +29,10 @@ def transform(image):
 
 # To transform the images in the proper format
 def transform_ALEXNET(image):
-    resize = transforms.Compose([transforms.Resize([224,224]), # resize the images #TODO
+    resize = transforms.Compose([transforms.Resize([224,224]), # resize the images as indicated by the original paper
                                  transforms.ToTensor()]) # to get a PyTorch tensor. The pixels' values will be scaled from the range [0, 255] to the range [0.0, 1.0]
     resized_image = resize(image)
-    #resized_image = resized_image * 255. # if uncommented, the accuracy will decrease #TODO
+    #resized_image = resized_image * 255. # if uncommented, the accuracy will decrease
     return resized_image
 
 
@@ -190,22 +190,6 @@ def perform_test(model, model_path, test_loader, dataset_test):
 
 
 
-
-class GrayscaleToRGBDataset(Dataset):
-    def __init__(self, original_dataset):
-        self.original_dataset = original_dataset
-        self.transform = transforms.Compose([transforms.Grayscale(num_output_channels=3)])
-
-    def __len__(self):
-        return len(self.original_dataset)
-
-    def __getitem__(self, idx):
-        img, target = self.original_dataset[idx]
-        img = self.transform(img)
-        return img, target
-
-
-
 # To extract features for each sample in the dataset
 def extract(model, loader):
     features = []
@@ -215,8 +199,8 @@ def extract(model, loader):
     with torch.no_grad():
         for inputs, target in loader:
             # Extract features from the intermediate layer
-            intermediate_features = model(inputs)
-            features.append(intermediate_features.view(intermediate_features.size(0), -1).numpy())
+            interm_feat = model(inputs)
+            features.append(interm_feat.view(interm_feat.size(0), -1).numpy())
             labels.append(target.numpy())
 
     # Concatenate features and labels

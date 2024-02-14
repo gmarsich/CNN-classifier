@@ -11,21 +11,21 @@ class CNN1(nn.Module):
         super(CNN1, self).__init__() # the constructor of the parent class (nn.Module) is called to initialize the model properly
 
         # Convolutional layer 1: in_channels=1 because we have a greyscale
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [1] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [2] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
         # ReLU activation after conv1
         self.relu1 = nn.ReLU() # output: 62*62
         # Max pooling layer 1
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 31*31 (from 62/2)
 
         # Convolutional layer 2
-        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, stride=1) # from [1] we know that output: 29*29
+        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=3, stride=1) # from [2] we know that output: 29*29
         # ReLU activation after conv2
         self.relu2 = nn.ReLU() # output: 29*29
         # Max pooling layer 2
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 14*14 (from the test in dim_images.ipynb)
 
         # Convolutional layer 3
-        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1) # from [1] we know that output: 12*12
+        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=3, stride=1) # from [2] we know that output: 12*12
         # ReLU activation after conv3  
         self.relu3 = nn.ReLU() # output: 12*12
 
@@ -74,7 +74,7 @@ class CNN2(nn.Module):
         super(CNN2, self).__init__() # the constructor of the parent class (nn.Module) is called to initialize the model properly.
 
         # Convolutional layer 1: in_channels=1 because we have a greyscale
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [1] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [2] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
         # batch normalization
         self.bn1 = nn.BatchNorm2d(8) # the parameter should be equal to the out_channels of the convolution
         # ReLU activation after conv1
@@ -83,7 +83,7 @@ class CNN2(nn.Module):
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 31*31 (from 62/2)
 
         # Convolutional layer 2
-        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5, stride=1) # from [1] we know that output: 29*29
+        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5, stride=1) # from [2] we know that output: 29*29
         # batch normalization
         self.bn2 = nn.BatchNorm2d(16)
         # ReLU activation after conv2
@@ -92,7 +92,7 @@ class CNN2(nn.Module):
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 14*14 (from the test in dim_images.ipynb)
 
         # Convolutional layer 3
-        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1) # from [1] we know that output: 12*12
+        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1) # from [2] we know that output: 12*12
         # batch normalization
         self.bn3 = nn.BatchNorm2d(32)
         # ReLU activation after conv3  
@@ -147,7 +147,7 @@ class CNN3(nn.Module):
         super(CNN3, self).__init__() # the constructor of the parent class (nn.Module) is called to initialize the model properly.
 
         # Convolutional layer 1: in_channels=1 because we have a greyscale
-        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [1] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
+        self.conv1 = nn.Conv2d(in_channels=1, out_channels=8, kernel_size=3, stride=1) # from [2] we get the formula: output = ((input - kernel_size + 2*padding)/stride) + 1 => 62*62
         # batch normalization
         self.bn1 = nn.BatchNorm2d(8) # the parameter should be equal to the out_channels of the convolution
         # ReLU activation after conv1
@@ -156,7 +156,7 @@ class CNN3(nn.Module):
         self.maxpool1 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 31*31 (from 62/2)
 
         # Convolutional layer 2
-        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5, stride=1) # from [1] we know that output: 29*29
+        self.conv2 = nn.Conv2d(in_channels=8, out_channels=16, kernel_size=5, stride=1) # from [2] we know that output: 29*29
         # batch normalization
         self.bn2 = nn.BatchNorm2d(16)
         # ReLU activation after conv2
@@ -165,7 +165,7 @@ class CNN3(nn.Module):
         self.maxpool2 = nn.MaxPool2d(kernel_size=2, stride=2) # output: 14*14 (from the test in dim_images.ipynb)
 
         # Convolutional layer 3
-        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1) # from [1] we know that output: 12*12
+        self.conv3 = nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1) # from [2] we know that output: 12*12
         # batch normalization
         self.bn3 = nn.BatchNorm2d(32)
         # ReLU activation after conv3  
