@@ -1,9 +1,7 @@
-# Project - CNN classifier (Computer Vision and Pattern Recognition)
+# CNN classifier
 
-### Marsich Gaia [SM3500600]
-In this repository all the files regarding the project for the course "Computer Vision and Pattern Recognition" are collected.
-
-
+### [Marsich Gaia](https://github.com/gmarsich)
+Implementation of an image classifier based on convolutional neural networks:
 * Folder `data`: stores the provided dataset. The two folders `train` and `test` that are inside collect the images respectively for the training phase and the testing phase. The label of an image is given by the folder in which it is contained
 
 * Folder `miscellaneous`: created with the idea to store some useful code to do some tests. It just contains `dim_images.ipynb`, used to determine the type of output of the layers in the network
